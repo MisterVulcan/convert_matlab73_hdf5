@@ -196,7 +196,7 @@ class Node(object):
 if __name__ == '__main__':
 
     import sys
-    import cPickle as pickle
+    import pickle
 
     filename = sys.argv[-1]
 
