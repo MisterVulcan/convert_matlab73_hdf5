@@ -23,7 +23,7 @@ def add_dtype_name(f, name):
     """
     global dtypes
     dtype = f.dtype            
-    if dtypes.has_key(dtype.name):
+    if dtype.name in dtypes:
         dtypes[dtype.name].add(name)
     else:
         dtypes[dtype.name] = set([name])
@@ -210,7 +210,7 @@ if __name__ == '__main__':
     
     filename = filename[:-4]+".pickle"
     print ("Saving", filename)
-    pickle.dump(data, open(filename,'w'),
+    pickle.dump(data, open(filename,'wb'),
                 protocol=pickle.HIGHEST_PROTOCOL)
 
 
