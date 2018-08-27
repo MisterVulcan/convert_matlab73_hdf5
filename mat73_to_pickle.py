@@ -23,7 +23,7 @@ def add_dtype_name(f, name):
     """
     global dtypes
     dtype = f.dtype            
-    if dtypes.has_key(dtype.name):
+    if dtype.name in dtypes:
         dtypes[dtype.name].add(name)
     else:
         dtypes[dtype.name] = set([name])
@@ -62,9 +62,9 @@ def recursive_dict(f, root=None, name='root'):
             add_dtype_name(f, name)
             dtype = f.dtype
             if (np.prod(f.shape)*f.dtype.itemsize) > 2e9:
-                print "WARNING: The array", name, "requires > 2Gb"
+                print ("WARNING: The array", name, "requires > 2Gb")
                 if f.dtype.char=='d':
-                    print "\t Recasting", dtype, "to float32"
+                    print ("\t Recasting", dtype, "to float32")
                     dtype = np.float32
                 else:
                     raise MemoryError
@@ -74,11 +74,11 @@ def recursive_dict(f, root=None, name='root'):
             try:
                 return string(f)
             except ValueError: # it wasn't...
-                print "WARNING:", name, ":"
-                print "\t", f
-                print "\t CONVERSION TO STRING FAILED, USING ARRAY!"
+                print ("WARNING:", name, ":")
+                print ("\t", f)
+                print ("\t CONVERSION TO STRING FAILED, USING ARRAY!")
                 tmp = np.array(f).squeeze()
-                print "\t", tmp
+                print ("\t", tmp)
                 return tmp
             pass
         elif f.dtype.name=='object': # this is a 2D array of HDF5 object references or just objects
@@ -93,9 +93,9 @@ def recursive_dict(f, root=None, name='root'):
             try:
                 return np.array(container).squeeze()
             except ValueError:
-                print "WARNING:", name, ":"
-                print "\t", container
-                print "\t CANNOT CONVERT INTO NON-OBJECT ARRAY"
+                print ("WARNING:", name, ":")
+                print ("\t", container)
+                print ("\t CANNOT CONVERT INTO NON-OBJECT ARRAY")
                 return np.array(container, dtype=np.object).squeeze()
         else:
             raise NotImplemented
@@ -129,7 +129,7 @@ class Node(object):
         if root is None: root = f
         self.__name = name
         if recursive:
-            print "Recursively parsing", f
+            print ("Recursively parsing", f)
             self.__recursive(f, root)
 
     def __recursive(self, f, root):
@@ -147,9 +147,9 @@ class Node(object):
                 # print "ARRAY!"
                 dtype = f.dtype
                 if (np.prod(f.shape)*f.dtype.itemsize) > 2e9:
-                    print "WARNING: The array", self.__name, "requires > 2Gb"
+                    print ("WARNING: The array", self.__name, "requires > 2Gb")
                     if f.dtype.char=='d':
-                        print "\t Recasting", dtype, "to float32"
+                        print ("\t Recasting", dtype, "to float32")
                         dtype = np.float32
                     else:
                         raise MemoryError
@@ -159,11 +159,11 @@ class Node(object):
                 try:
                     return string(f)
                 except ValueError: # it wasn't...
-                    print "WARNING:", self.__name, ":"
-                    print "\t", f
-                    print "\t CONVERSION TO STRING FAILED, USING ARRAY!"
+                    print ("WARNING:", self.__name, ":")
+                    print ("\t", f)
+                    print ("\t CONVERSION TO STRING FAILED, USING ARRAY!")
                     tmp = np.array(f).squeeze()
-                    print "\t", tmp
+                    print ("\t", tmp)
                     return tmp
                 pass
             elif f.dtype.name=='object': # this is a 2D array of HDF5 object references or just objects
@@ -182,9 +182,9 @@ class Node(object):
                 try:
                     return np.array(container).squeeze()
                 except ValueError:
-                    print "WARNING:", self.__name, ":"
-                    print "\t", container
-                    print "\t CANNOT CONVERT INTO NON-OBJECT ARRAY"
+                    print ("WARNING:", self.__name, ":")
+                    print ("\t", container)
+                    print ("\t CANNOT CONVERT INTO NON-OBJECT ARRAY")
                     return np.array(container, dtype=np.object).squeeze()
             else:
                 raise NotImplemented
@@ -196,11 +196,11 @@ class Node(object):
 if __name__ == '__main__':
 
     import sys
-    import cPickle as pickle
+    import pickle
 
     filename = sys.argv[-1]
 
-    print "Loading", filename
+    print ("Loading", filename)
 
     f = h5py.File(filename, mode='r')
 
@@ -209,8 +209,8 @@ if __name__ == '__main__':
     # data = Node(f)
     
     filename = filename[:-4]+".pickle"
-    print "Saving", filename
-    pickle.dump(data, open(filename,'w'),
+    print ("Saving", filename)
+    pickle.dump(data, open(filename,'wb'),
                 protocol=pickle.HIGHEST_PROTOCOL)
 
 
